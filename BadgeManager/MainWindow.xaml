@@ -2,37 +2,95 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Badge Manager"
-        Height="350"
-        Width="500"
-        WindowStartupLocation="CenterScreen">
+        Height="600"
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F6F8">
 
-    <Grid Background="#F4F6F8">
-        <Border Background="White"
-                CornerRadius="12"
-                Padding="30"
-                Width="360"
-                Height="220"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <StackPanel>
+        <!-- MENU LATERAL -->
+        <Border Grid.Column="0" Background="#111827">
+            <StackPanel Margin="20">
+
                 <TextBlock Text="Badge Manager"
-                           FontSize="28"
+                           Foreground="White"
+                           FontSize="24"
                            FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,20"/>
+                           Margin="0,20,0,40"/>
 
-                <Button x:Name="BtnGoogleLogin"
-                        Content="Entrar com Google"
-                        Height="40"
-                        Click="BtnGoogleLogin_Click"/>
+                <Button x:Name="BtnFuncionarios"
+                        Content="Funcionários"
+                        Height="45"
+                        Margin="0,0,0,12"
+                        FontSize="15"
+                        Background="#2563EB"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Click="BtnFuncionarios_Click"/>
 
-                <TextBlock x:Name="TxtStatus"
-                           Text="Status: Não conectado"
-                           Margin="0,20,0,0"
-                           HorizontalAlignment="Center"/>
+                <Button Content="Crachás"
+                        Height="45"
+                        Margin="0,0,0,12"
+                        FontSize="15"
+                        Background="#1F2937"
+                        Foreground="White"
+                        BorderThickness="0"/>
+
+                <Button Content="Google Drive"
+                        Height="45"
+                        Margin="0,0,0,12"
+                        FontSize="15"
+                        Background="#1F2937"
+                        Foreground="White"
+                        BorderThickness="0"/>
+
+                <Button Content="Configurações"
+                        Height="45"
+                        FontSize="15"
+                        Background="#1F2937"
+                        Foreground="White"
+                        BorderThickness="0"/>
+
             </StackPanel>
-
         </Border>
+
+        <!-- CONTEÚDO -->
+        <Grid Grid.Column="1" Margin="30">
+            <StackPanel>
+
+                <TextBlock x:Name="TxtTituloPagina"
+                           Text="Bem-vindo"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="#111827"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock x:Name="TxtDescricaoPagina"
+                           Text="Selecione uma opção no menu lateral."
+                           FontSize="16"
+                           Foreground="#6B7280"
+                           Margin="0,0,0,30"/>
+
+                <Border Background="White"
+                        CornerRadius="12"
+                        Padding="20"
+                        MinHeight="350">
+
+                    <StackPanel x:Name="AreaConteudo">
+
+                        <TextBlock Text="Status: Conectado ao Google Drive"
+                                   FontSize="16"
+                                   Foreground="#16A34A"/>
+
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

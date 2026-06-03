@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using BadgeManager.Services;
 
 namespace BadgeManager
@@ -13,24 +14,21 @@ namespace BadgeManager
             _googleDriveAuthService = new GoogleDriveAuthService();
         }
 
-        private async void BtnGoogleLogin_Click(object sender, RoutedEventArgs e)
+        private void BtnFuncionarios_Click(object sender, RoutedEventArgs e)
         {
-            TxtStatus.Text = "Status: Conectando ao Google...";
-            BtnGoogleLogin.IsEnabled = false;
+            TxtTituloPagina.Text = "Funcionários";
+            TxtDescricaoPagina.Text = "Lista de funcionários cadastrados.";
 
-            var driveService = await _googleDriveAuthService.LoginAsync();
+            AreaConteudo.Children.Clear();
 
-            if (driveService != null)
-            {
-                TxtStatus.Text = "Status: Conectado ao Google Drive";
-                MessageBox.Show("Login realizado com sucesso!");
-            }
-            else
-            {
-                TxtStatus.Text = "Status: Erro ao conectar";
-                MessageBox.Show("Não foi possível conectar ao Google Drive.");
-                BtnGoogleLogin.IsEnabled = true;
-            }
+            var lista = new ListView();
+
+            lista.Items.Add("Bruno Leal");
+            lista.Items.Add("Funcionário Exemplo 1");
+            lista.Items.Add("Funcionário Exemplo 2");
+            lista.Items.Add("Funcionário Exemplo 3");
+
+            AreaConteudo.Children.Add(lista);
         }
     }
 }

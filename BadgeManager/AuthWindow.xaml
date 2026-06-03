@@ -1,0 +1,48 @@
+﻿<Window x:Class="BadgeManager.AuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Badge Manager - Login"
+        Height="350"
+        Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F4F6F8">
+
+    <Grid>
+        <Border Background="White"
+                CornerRadius="14"
+                Padding="30"
+                Width="360"
+                Height="230"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Badge Manager"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock Text="Conecte sua conta Google Drive"
+                           FontSize="14"
+                           Foreground="#6B7280"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,25"/>
+
+                <Button x:Name="BtnEntrarGoogle"
+                        Content="Entrar com Google"
+                        Height="42"
+                        FontSize="15"
+                        Click="BtnEntrarGoogle_Click"/>
+
+                <TextBlock x:Name="TxtStatusAuth"
+                           Text="Status: Não conectado"
+                           FontSize="13"
+                           Foreground="#6B7280"
+                           HorizontalAlignment="Center"
+                           Margin="0,18,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -26,7 +26,7 @@ namespace BadgeManager.Services
                     scopes,
                     "user",
                     CancellationToken.None,
-                    new FileDataStore("BadgeManager.TokenStore", true));
+                    new FileDataStore("BadgeManager.TokenStore.Teste", true));
 
                 return new DriveService(new BaseClientService.Initializer()
                 {
