@@ -427,3 +427,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# Credenciais do Google OAuth
+Credentials/
+credentials.json
+client_secret*.json

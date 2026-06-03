@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37314.3 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BadgeManager", "BadgeManager.vbproj", "{D1C57244-9979-47A9-9FD3-A5B604DD0596}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BadgeManager", "BadgeManager.csproj", "{51B32A83-0729-4046-A8BA-B3A883F5876D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D1C57244-9979-47A9-9FD3-A5B604DD0596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1C57244-9979-47A9-9FD3-A5B604DD0596}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1C57244-9979-47A9-9FD3-A5B604DD0596}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1C57244-9979-47A9-9FD3-A5B604DD0596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B32A83-0729-4046-A8BA-B3A883F5876D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B32A83-0729-4046-A8BA-B3A883F5876D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B32A83-0729-4046-A8BA-B3A883F5876D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B32A83-0729-4046-A8BA-B3A883F5876D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9CBE0688-3A9E-4EA4-A34E-75DE0DF9F615}
+		SolutionGuid = {99AC5221-41E7-420C-B1DC-010557EA4AE0}
 	EndGlobalSection
 EndGlobal
