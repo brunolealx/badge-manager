@@ -24,37 +24,37 @@
                            Margin="0,20,0,40"/>
 
                 <Button x:Name="BtnFuncionarios"
-                        Content="Funcionários"
-                        Height="45"
-                        Margin="0,0,0,12"
-                        FontSize="15"
-                        Background="#2563EB"
-                        Foreground="White"
-                        BorderThickness="0"
-                        Click="BtnFuncionarios_Click"/>
+        Content="Funcionários"
+        Height="45"
+        Margin="0,0,0,12"
+        FontSize="15"
+        Background="#2563EB"
+        Foreground="White"
+        BorderThickness="0"
+        Click="BtnFuncionarios_Click"/>
 
-                <Button Content="Crachás"
-                        Height="45"
-                        Margin="0,0,0,12"
-                        FontSize="15"
-                        Background="#1F2937"
-                        Foreground="White"
-                        BorderThickness="0"/>
+                <Button Content="Documentos"
+        Height="45"
+        Margin="0,0,0,12"
+        FontSize="15"
+        Background="#1F2937"
+        Foreground="White"
+        BorderThickness="0"/>
 
-                <Button Content="Google Drive"
-                        Height="45"
-                        Margin="0,0,0,12"
-                        FontSize="15"
-                        Background="#1F2937"
-                        Foreground="White"
-                        BorderThickness="0"/>
+                <Button Content="Portais"
+        Height="45"
+        Margin="0,0,0,12"
+        FontSize="15"
+        Background="#1F2937"
+        Foreground="White"
+        BorderThickness="0"/>
 
                 <Button Content="Configurações"
-                        Height="45"
-                        FontSize="15"
-                        Background="#1F2937"
-                        Foreground="White"
-                        BorderThickness="0"/>
+        Height="45"
+        FontSize="15"
+        Background="#1F2937"
+        Foreground="White"
+        BorderThickness="0"/>
 
             </StackPanel>
         </Border>

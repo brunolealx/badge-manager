@@ -22,7 +22,7 @@ namespace BadgeManager
 
             if (driveService != null)
             {
-                TxtStatusAuth.Text = "Status: Conectado";
+                GoogleDriveSession.DriveService = driveService;
 
                 var mainWindow = new MainWindow();
                 mainWindow.Show();
