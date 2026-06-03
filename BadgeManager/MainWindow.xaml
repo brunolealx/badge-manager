@@ -1,12 +1,38 @@
 ﻿<Window x:Class="BadgeManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BadgeManager"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Badge Manager"
+        Height="350"
+        Width="500"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid Background="#F4F6F8">
+        <Border Background="White"
+                CornerRadius="12"
+                Padding="30"
+                Width="360"
+                Height="220"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+            <StackPanel>
+                <TextBlock Text="Badge Manager"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <Button x:Name="BtnGoogleLogin"
+                        Content="Entrar com Google"
+                        Height="40"
+                        Click="BtnGoogleLogin_Click"/>
+
+                <TextBlock x:Name="TxtStatus"
+                           Text="Status: Não conectado"
+                           Margin="0,20,0,0"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+
+        </Border>
     </Grid>
 </Window>
