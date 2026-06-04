@@ -5,6 +5,7 @@ using System.Windows.Media;
 using BadgeManager.Services;
 using PdfSharp.Pdf.IO;
 using UglyToad.PdfPig;
+using Microsoft.Win32;
 
 namespace BadgeManager
 {
@@ -171,7 +172,7 @@ namespace BadgeManager
             btnTrocar.Click += (_, _) =>
             {
                 _paginaSelecionada = numeroPagina;
-                MessageBox.Show($"Trocar página {numeroPagina}");
+                TrocarPagina(numeroPagina);
             };
 
             btnAdicionar.Click += (_, _) =>
@@ -193,6 +194,22 @@ namespace BadgeManager
             PainelPaginas.Children.Add(linha);
         }
 
+        private void TrocarPagina(int numeroPagina)
+        {
+            var dialog = new OpenFileDialog();
+
+            dialog.Title = $"Selecionar PDF para substituir página {numeroPagina}";
+            dialog.Filter = "Arquivos PDF (*.pdf)|*.pdf";
+
+            if (dialog.ShowDialog() == true)
+            {
+                string arquivoSelecionado = dialog.FileName;
+
+                MessageBox.Show(
+                    $"Página {numeroPagina}\n\nPDF selecionado:\n{arquivoSelecionado}");
+            }
+        }
+
         private void BtnTrocarPagina_Click(object sender, RoutedEventArgs e)
         {
             if (_paginaSelecionada == null)
@@ -201,7 +218,7 @@ namespace BadgeManager
                 return;
             }
 
-            MessageBox.Show($"Trocar página {_paginaSelecionada} do PDF {_fileName}");
+            TrocarPagina(_paginaSelecionada.Value);
         }
     }
 }
