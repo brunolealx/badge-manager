@@ -6,6 +6,8 @@ using BadgeManager.Services;
 using PdfSharp.Pdf.IO;
 using UglyToad.PdfPig;
 using Microsoft.Win32;
+using Google.Apis.Upload;
+using PdfSharp.Pdf;
 
 namespace BadgeManager
 {
@@ -53,7 +55,7 @@ namespace BadgeManager
 
             TxtStatus.Text = $"Total de páginas: {totalPaginas}";
 
-            using var pdfPigDocument = PdfDocument.Open(tempPath);
+            using var pdfPigDocument = UglyToad.PdfPig.PdfDocument.Open(tempPath);
 
             for (int i = 1; i <= totalPaginas; i++)
             {
@@ -194,20 +196,96 @@ namespace BadgeManager
             PainelPaginas.Children.Add(linha);
         }
 
-        private void TrocarPagina(int numeroPagina)
+        private async void TrocarPagina(int numeroPagina)
         {
-            var dialog = new OpenFileDialog();
-
-            dialog.Title = $"Selecionar PDF para substituir página {numeroPagina}";
-            dialog.Filter = "Arquivos PDF (*.pdf)|*.pdf";
-
-            if (dialog.ShowDialog() == true)
+            var dialog = new OpenFileDialog
             {
-                string arquivoSelecionado = dialog.FileName;
+                Title = $"Selecionar PDF para substituir a página {numeroPagina}",
+                Filter = "Arquivos PDF (*.pdf)|*.pdf"
+            };
 
-                MessageBox.Show(
-                    $"Página {numeroPagina}\n\nPDF selecionado:\n{arquivoSelecionado}");
+            if (dialog.ShowDialog() != true)
+                return;
+
+            var confirmar = MessageBox.Show(
+      $"ATENÇÃO!\n\nA página {numeroPagina} será substituída permanentemente no Google Drive.\n\nDeseja continuar?",
+                  "Confirmar substituição",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirmar != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                TxtStatus.Text = "Atualizando PDF no Google Drive...";
+
+                await SubstituirPaginaEAtualizarDriveAsync(numeroPagina, dialog.FileName);
+
+                MessageBox.Show("Página substituída e PDF atualizado no Google Drive com sucesso!");
+
+                await CarregarPaginasReaisAsync();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao substituir página:\n{ex.Message}");
+            }
+        }
+        private async Task SubstituirPaginaEAtualizarDriveAsync(int numeroPagina, string novoPdfPath)
+        {
+            var driveService = GoogleDriveSession.DriveService;
+
+            if (driveService == null)
+                throw new Exception("Google Drive não conectado.");
+
+            var pdfOriginalPath = Path.Combine(Path.GetTempPath(), _fileName);
+            var pdfAtualizadoPath = Path.Combine(
+                Path.GetTempPath(),
+                $"updated_{Guid.NewGuid()}_{_fileName}");
+
+            using (var stream = new FileStream(pdfOriginalPath, FileMode.Create, FileAccess.Write))
+            {
+                var downloadRequest = driveService.Files.Get(_fileId);
+                await downloadRequest.DownloadAsync(stream);
+            }
+
+            using var pdfOriginal = PdfReader.Open(pdfOriginalPath, PdfDocumentOpenMode.Import);
+            using var pdfNovo = PdfReader.Open(novoPdfPath, PdfDocumentOpenMode.Import);
+
+            if (numeroPagina < 1 || numeroPagina > pdfOriginal.PageCount)
+                throw new Exception("Número de página inválido.");
+
+            if (pdfNovo.PageCount < 1)
+                throw new Exception("O PDF selecionado não possui páginas.");
+
+            var pdfFinal = new PdfSharp.Pdf.PdfDocument();
+
+            for (int i = 0; i < pdfOriginal.PageCount; i++)
+            {
+                if (i == numeroPagina - 1)
+                {
+                    pdfFinal.AddPage(pdfNovo.Pages[0]);
+                }
+                else
+                {
+                    pdfFinal.AddPage(pdfOriginal.Pages[i]);
+                }
+            }
+
+            pdfFinal.Save(pdfAtualizadoPath);
+
+            using var uploadStream = new FileStream(pdfAtualizadoPath, FileMode.Open, FileAccess.Read);
+
+            var updateRequest = driveService.Files.Update(
+                new Google.Apis.Drive.v3.Data.File(),
+                _fileId,
+                uploadStream,
+                "application/pdf");
+
+            var uploadResult = await updateRequest.UploadAsync();
+
+            if (uploadResult.Status != UploadStatus.Completed)
+                throw new Exception(uploadResult.Exception?.Message ?? "Falha ao atualizar o PDF no Google Drive.");
         }
 
         private void BtnTrocarPagina_Click(object sender, RoutedEventArgs e)
@@ -219,6 +297,8 @@ namespace BadgeManager
             }
 
             TrocarPagina(_paginaSelecionada.Value);
+
         }
+
     }
 }
