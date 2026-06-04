@@ -1,0 +1,45 @@
+﻿<Window x:Class="BadgeManager.PdfEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Editor de PDF"
+        Height="650"
+        Width="900"
+        WindowStartupLocation="CenterOwner"
+        Background="#F4F6F8">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="TxtNomePdf"
+                   Text="PDF"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Foreground="#111827"
+                   Margin="0,0,0,10"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,20">
+
+            <Button x:Name="BtnTrocarPagina"
+                    Content="Trocar página por outro PDF"
+                    Width="220"
+                    Height="38"
+                    Click="BtnTrocarPagina_Click"/>
+
+            <TextBlock x:Name="TxtStatus"
+                       Text="Nenhuma página selecionada"
+                       VerticalAlignment="Center"
+                       Margin="20,0,0,0"
+                       Foreground="#6B7280"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2">
+            <WrapPanel x:Name="PainelPaginas"/>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -77,6 +77,13 @@ namespace BadgeManager
                     BorderThickness = new Thickness(1)
                 };
 
+                card.MouseLeftButtonDown += (_, _) =>
+                {
+                    var editor = new PdfEditorWindow(arquivo.Id, arquivo.Name);
+                    editor.Owner = this;
+                    editor.ShowDialog();
+                };
+
                 var stack = new StackPanel();
 
                 var fotoFake = new Border
