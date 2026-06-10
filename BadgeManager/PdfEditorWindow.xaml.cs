@@ -8,6 +8,7 @@ using UglyToad.PdfPig;
 using Microsoft.Win32;
 using Google.Apis.Upload;
 using PdfSharp.Pdf;
+using System.Diagnostics;
 
 namespace BadgeManager
 {
@@ -108,6 +109,14 @@ namespace BadgeManager
 
         private void CriarLinhaPagina(int numeroPagina, string resumo)
         {
+            var btnVisualizar = new Button
+            {
+                Content = "Visualizar",
+                Width = 100,
+                Height = 34,
+                Margin = new Thickness(0, 0, 10, 0)
+            };
+
             var linha = new Border
             {
                 Background = Brushes.White,
@@ -165,6 +174,11 @@ namespace BadgeManager
                 Height = 34
             };
 
+            btnVisualizar.Click += (_, _) =>
+            {
+                VisualizarPdf();
+            };
+
             btnExcluir.Click += (_, _) =>
             {
                 _paginaSelecionada = numeroPagina;
@@ -183,6 +197,7 @@ namespace BadgeManager
                 AdicionarPaginaAbaixo(numeroPagina);
             };
 
+            painelBotoes.Children.Add(btnVisualizar);
             painelBotoes.Children.Add(btnExcluir);
             painelBotoes.Children.Add(btnTrocar);
             painelBotoes.Children.Add(btnAdicionar);
@@ -194,6 +209,44 @@ namespace BadgeManager
             linha.Child = stack;
 
             PainelPaginas.Children.Add(linha);
+        }
+
+        private async void VisualizarPdf()
+        {
+            try
+            {
+                TxtStatus.Text = "Abrindo PDF para visualização...";
+
+                var driveService = GoogleDriveSession.DriveService;
+
+                if (driveService == null)
+                {
+                    MessageBox.Show("Google Drive não conectado.");
+                    return;
+                }
+
+                var tempPath = Path.Combine(
+                    Path.GetTempPath(),
+                    _fileName);
+
+                using (var stream = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
+                {
+                    var request = driveService.Files.Get(_fileId);
+                    await request.DownloadAsync(stream);
+                }
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = tempPath,
+                    UseShellExecute = true
+                });
+
+                TxtStatus.Text = "PDF aberto para visualização.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao visualizar PDF:\n{ex.Message}");
+            }
         }
 
         private async void TrocarPagina(int numeroPagina)
