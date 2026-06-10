@@ -62,47 +62,27 @@ namespace BadgeManager
             {
                 var page = pdfPigDocument.GetPage(i);
                 string textoPagina = page.Text ?? "";
-                string resumo = IdentificarDocumento(textoPagina);
+                string resumo = ObterResumoPagina(textoPagina);
 
                 CriarLinhaPagina(i, resumo);
             }
         }
 
-        private string IdentificarDocumento(string texto)
+        private string ObterResumoPagina(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
-                return "Documento não identificado";
+                return "Documento sem texto detectável";
 
-            string t = texto.ToUpper();
+            string resumo = texto
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Trim();
 
-            if (t.Contains("ATESTADO DE SAÚDE OCUPACIONAL") || t.Contains("ASO"))
-                return "ASO";
+            while (resumo.Contains("  "))
+                resumo = resumo.Replace("  ", " ");
 
-            if (t.Contains("NR35") || t.Contains("NR 35") || t.Contains("TRABALHO EM ALTURA"))
-                return "Certificado NR35";
-
-            if (t.Contains("NR10") || t.Contains("NR 10") || t.Contains("SEGURANÇA EM INSTALAÇÕES"))
-                return "Certificado NR10";
-
-            if (t.Contains("CARTEIRA DE IDENTIDADE") || t.Contains("REGISTRO GERAL") || t.Contains("RG"))
-                return "RG";
-
-            if (t.Contains("CADASTRO DE PESSOA FÍSICA") || t.Contains("CPF"))
-                return "CPF";
-
-            if (t.Contains("CNH") || t.Contains("CARTEIRA NACIONAL DE HABILITAÇÃO"))
-                return "CNH";
-
-            if (t.Contains("FICHA DE EPI") || t.Contains("EQUIPAMENTO DE PROTEÇÃO INDIVIDUAL"))
-                return "Ficha de EPI";
-
-            if (t.Contains("CONTRATO"))
-                return "Contrato";
-
-            var resumo = texto.Replace("\r", " ").Replace("\n", " ").Trim();
-
-            if (resumo.Length > 60)
-                resumo = resumo.Substring(0, 60) + "...";
+            if (resumo.Length > 100)
+                resumo = resumo.Substring(0, 100) + "...";
 
             return resumo;
         }

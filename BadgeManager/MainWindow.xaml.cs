@@ -13,10 +13,10 @@ namespace BadgeManager
             InitializeComponent();
         }
 
-        private async void BtnFuncionarios_Click(object sender, RoutedEventArgs e)
+        private async void BtnGerenciarCrachas_Click(object sender, RoutedEventArgs e)
         {
-            TxtTituloPagina.Text = "Funcionários";
-            TxtDescricaoPagina.Text = "PDFs encontrados no Google Drive.";
+            TxtTituloPagina.Text = "Gerenciar Crachás";
+            TxtDescricaoPagina.Text = "Selecione um PDF para visualizar, trocar, excluir ou acrescentar páginas.";
 
             AreaConteudo.Children.Clear();
 
@@ -118,6 +118,26 @@ namespace BadgeManager
                 card.Child = stack;
                 painelCards.Children.Add(card);
             }
+        }
+
+        private void BtnArteCracha_Click(object sender, RoutedEventArgs e)
+        {
+            TxtTituloPagina.Text = "Arte do Crachá";
+            TxtDescricaoPagina.Text = "Visualização da arte oficial do crachá.";
+
+            AreaConteudo.Children.Clear();
+
+            MessageBox.Show("Aqui vamos exibir a imagem PNG da arte do crachá.");
+        }
+
+        private void BtnAbrirDrive_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Aqui vamos abrir a pasta do Google Drive.");
+        }
+
+        private void BtnSair_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
