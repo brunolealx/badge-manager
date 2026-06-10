@@ -176,7 +176,7 @@ namespace BadgeManager
 
             btnVisualizar.Click += (_, _) =>
             {
-                VisualizarPdf();
+                VisualizarPagina(numeroPagina);
             };
 
             btnExcluir.Click += (_, _) =>
@@ -211,11 +211,11 @@ namespace BadgeManager
             PainelPaginas.Children.Add(linha);
         }
 
-        private async void VisualizarPdf()
+        private async void VisualizarPagina(int numeroPagina)
         {
             try
             {
-                TxtStatus.Text = "Abrindo PDF para visualização...";
+                TxtStatus.Text = $"Abrindo página {numeroPagina} para visualização...";
 
                 var driveService = GoogleDriveSession.DriveService;
 
@@ -225,27 +225,41 @@ namespace BadgeManager
                     return;
                 }
 
-                var tempPath = Path.Combine(
-                    Path.GetTempPath(),
-                    _fileName);
+                var pdfOriginalPath = Path.Combine(Path.GetTempPath(), _fileName);
 
-                using (var stream = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
+                var paginaTempPath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"preview_pagina_{numeroPagina}_{Guid.NewGuid()}_{_fileName}");
+
+                using (var stream = new FileStream(pdfOriginalPath, FileMode.Create, FileAccess.Write))
                 {
                     var request = driveService.Files.Get(_fileId);
                     await request.DownloadAsync(stream);
                 }
 
+                using var pdfOriginal = PdfReader.Open(pdfOriginalPath, PdfDocumentOpenMode.Import);
+
+                if (numeroPagina < 1 || numeroPagina > pdfOriginal.PageCount)
+                {
+                    MessageBox.Show("Número de página inválido.");
+                    return;
+                }
+
+                var pdfPagina = new PdfSharp.Pdf.PdfDocument();
+                pdfPagina.AddPage(pdfOriginal.Pages[numeroPagina - 1]);
+                pdfPagina.Save(paginaTempPath);
+
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = tempPath,
+                    FileName = paginaTempPath,
                     UseShellExecute = true
                 });
 
-                TxtStatus.Text = "PDF aberto para visualização.";
+                TxtStatus.Text = $"Página {numeroPagina} aberta para visualização.";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao visualizar PDF:\n{ex.Message}");
+                MessageBox.Show($"Erro ao visualizar página:\n{ex.Message}");
             }
         }
 
