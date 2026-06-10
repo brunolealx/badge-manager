@@ -180,7 +180,7 @@ namespace BadgeManager
             btnAdicionar.Click += (_, _) =>
             {
                 _paginaSelecionada = numeroPagina;
-                MessageBox.Show($"Adicionar página abaixo da página {numeroPagina}");
+                AdicionarPaginaAbaixo(numeroPagina);
             };
 
             painelBotoes.Children.Add(btnExcluir);
@@ -357,6 +357,95 @@ namespace BadgeManager
             {
                 if (i != numeroPagina - 1)
                     pdfFinal.AddPage(pdfOriginal.Pages[i]);
+            }
+
+            pdfFinal.Save(pdfAtualizadoPath);
+
+            using var uploadStream = new FileStream(pdfAtualizadoPath, FileMode.Open, FileAccess.Read);
+
+            var updateRequest = driveService.Files.Update(
+                new Google.Apis.Drive.v3.Data.File(),
+                _fileId,
+                uploadStream,
+                "application/pdf");
+
+            var uploadResult = await updateRequest.UploadAsync();
+
+            if (uploadResult.Status != Google.Apis.Upload.UploadStatus.Completed)
+                throw new Exception(uploadResult.Exception?.Message ?? "Falha ao atualizar o PDF no Google Drive.");
+        }
+
+        private async void AdicionarPaginaAbaixo(int numeroPagina)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = $"Selecionar PDF para adicionar abaixo da página {numeroPagina}",
+                Filter = "Arquivos PDF (*.pdf)|*.pdf"
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            var confirmar = MessageBox.Show(
+                $"Deseja adicionar uma página abaixo da página {numeroPagina} e atualizar o PDF no Google Drive?",
+                "Confirmar adição",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirmar != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                TxtStatus.Text = "Adicionando página e atualizando Google Drive...";
+
+                await AdicionarPaginaAbaixoEAtualizarDriveAsync(numeroPagina, dialog.FileName);
+
+                MessageBox.Show("Página adicionada e PDF atualizado no Google Drive com sucesso!");
+
+                await CarregarPaginasReaisAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao adicionar página:\n{ex.Message}");
+            }
+        }
+
+        private async Task AdicionarPaginaAbaixoEAtualizarDriveAsync(int numeroPagina, string novoPdfPath)
+        {
+            var driveService = GoogleDriveSession.DriveService;
+
+            if (driveService == null)
+                throw new Exception("Google Drive não conectado.");
+
+            var pdfOriginalPath = Path.Combine(Path.GetTempPath(), _fileName);
+            var pdfAtualizadoPath = Path.Combine(
+                Path.GetTempPath(),
+                $"updated_{Guid.NewGuid()}_{_fileName}");
+
+            using (var stream = new FileStream(pdfOriginalPath, FileMode.Create, FileAccess.Write))
+            {
+                var downloadRequest = driveService.Files.Get(_fileId);
+                await downloadRequest.DownloadAsync(stream);
+            }
+
+            using var pdfOriginal = PdfReader.Open(pdfOriginalPath, PdfDocumentOpenMode.Import);
+            using var pdfNovo = PdfReader.Open(novoPdfPath, PdfDocumentOpenMode.Import);
+
+            if (numeroPagina < 1 || numeroPagina > pdfOriginal.PageCount)
+                throw new Exception("Número de página inválido.");
+
+            if (pdfNovo.PageCount < 1)
+                throw new Exception("O PDF selecionado não possui páginas.");
+
+            var pdfFinal = new PdfSharp.Pdf.PdfDocument();
+
+            for (int i = 0; i < pdfOriginal.PageCount; i++)
+            {
+                pdfFinal.AddPage(pdfOriginal.Pages[i]);
+
+                if (i == numeroPagina - 1)
+                    pdfFinal.AddPage(pdfNovo.Pages[0]);
             }
 
             pdfFinal.Save(pdfAtualizadoPath);
