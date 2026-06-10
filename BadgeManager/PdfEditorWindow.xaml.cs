@@ -168,7 +168,7 @@ namespace BadgeManager
             btnExcluir.Click += (_, _) =>
             {
                 _paginaSelecionada = numeroPagina;
-                MessageBox.Show($"Excluir página {numeroPagina}");
+                ExcluirPagina(numeroPagina);
             };
 
             btnTrocar.Click += (_, _) =>
@@ -298,6 +298,81 @@ namespace BadgeManager
 
             TrocarPagina(_paginaSelecionada.Value);
 
+        }
+        private async void ExcluirPagina(int numeroPagina)
+        {
+            var confirmar = MessageBox.Show(
+                $"ATENÇÃO!\n\nA página {numeroPagina} será excluída permanentemente do PDF no Google Drive.\n\nDeseja continuar?",
+                "Confirmar exclusão",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirmar != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                TxtStatus.Text = "Excluindo página e atualizando Google Drive...";
+
+                await ExcluirPaginaEAtualizarDriveAsync(numeroPagina);
+
+                MessageBox.Show("Página excluída e PDF atualizado no Google Drive com sucesso!");
+
+                await CarregarPaginasReaisAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir página:\n{ex.Message}");
+            }
+        }
+        private async Task ExcluirPaginaEAtualizarDriveAsync(int numeroPagina)
+        {
+            var driveService = GoogleDriveSession.DriveService;
+
+            if (driveService == null)
+                throw new Exception("Google Drive não conectado.");
+
+            var pdfOriginalPath = Path.Combine(Path.GetTempPath(), _fileName);
+            var pdfAtualizadoPath = Path.Combine(
+                Path.GetTempPath(),
+                $"updated_{Guid.NewGuid()}_{_fileName}");
+
+            using (var stream = new FileStream(pdfOriginalPath, FileMode.Create, FileAccess.Write))
+            {
+                var downloadRequest = driveService.Files.Get(_fileId);
+                await downloadRequest.DownloadAsync(stream);
+            }
+
+            using var pdfOriginal = PdfReader.Open(pdfOriginalPath, PdfDocumentOpenMode.Import);
+
+            if (pdfOriginal.PageCount <= 1)
+                throw new Exception("Não é possível excluir a única página do PDF.");
+
+            if (numeroPagina < 1 || numeroPagina > pdfOriginal.PageCount)
+                throw new Exception("Número de página inválido.");
+
+            var pdfFinal = new PdfSharp.Pdf.PdfDocument();
+
+            for (int i = 0; i < pdfOriginal.PageCount; i++)
+            {
+                if (i != numeroPagina - 1)
+                    pdfFinal.AddPage(pdfOriginal.Pages[i]);
+            }
+
+            pdfFinal.Save(pdfAtualizadoPath);
+
+            using var uploadStream = new FileStream(pdfAtualizadoPath, FileMode.Open, FileAccess.Read);
+
+            var updateRequest = driveService.Files.Update(
+                new Google.Apis.Drive.v3.Data.File(),
+                _fileId,
+                uploadStream,
+                "application/pdf");
+
+            var uploadResult = await updateRequest.UploadAsync();
+
+            if (uploadResult.Status != Google.Apis.Upload.UploadStatus.Completed)
+                throw new Exception(uploadResult.Exception?.Message ?? "Falha ao atualizar o PDF no Google Drive.");
         }
 
     }
