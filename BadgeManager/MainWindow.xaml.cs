@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using BadgeManager.Services;
 using Google.Apis.Drive.v3;
+using System.Diagnostics;
 
 namespace BadgeManager
 {
@@ -107,11 +108,17 @@ namespace BadgeManager
             MessageBox.Show("Aqui vamos exibir a imagem PNG da arte do crachá.");
         }
 
-        private void BtnAbrirDrive_Click(object sender, RoutedEventArgs e)
+        private void BtnSobre_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Aqui vamos abrir a pasta do Google Drive.");
+            MessageBox.Show(
+                "Badge Manager\n\n" +
+                "Versão 1.0\n\n" +
+                "Sistema de gerenciamento de crachás integrado ao Google Drive.\n\n" +
+                "© Top Conexões",
+                "Sobre",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
-
         private void BtnSair_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();

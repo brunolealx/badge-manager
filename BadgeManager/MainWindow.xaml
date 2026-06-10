@@ -44,14 +44,14 @@
         Click="BtnArteCracha_Click"/>
 
                 <Button x:Name="BtnAbrirDrive"
-        Content="Abrir Drive"
+        Content="Sobre"
         Height="45"
         Margin="0,0,0,12"
         FontSize="15"
         Background="#1F2937"
         Foreground="White"
         BorderThickness="0"
-        Click="BtnAbrirDrive_Click"/>
+        Click="BtnSobre_Click"/>
 
                 <Button x:Name="BtnSair"
         Content="Sair"
