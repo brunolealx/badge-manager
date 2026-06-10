@@ -100,14 +100,10 @@ namespace BadgeManager
 
         private void BtnArteCracha_Click(object sender, RoutedEventArgs e)
         {
-            TxtTituloPagina.Text = "Arte do Crachá";
-            TxtDescricaoPagina.Text = "Visualização da arte oficial do crachá.";
-
-            AreaConteudo.Children.Clear();
-
-            MessageBox.Show("Aqui vamos exibir a imagem PNG da arte do crachá.");
+            var janela = new ArteCrachaWindow();
+            janela.Owner = this;
+            janela.ShowDialog();
         }
-
         private void BtnSobre_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(
