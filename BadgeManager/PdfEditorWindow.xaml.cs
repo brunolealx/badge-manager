@@ -337,13 +337,7 @@ namespace BadgeManager
 
         private void BtnTrocarPagina_Click(object sender, RoutedEventArgs e)
         {
-            if (_paginaSelecionada == null)
-            {
-                MessageBox.Show("Selecione uma página antes de trocar.");
-                return;
-            }
-
-            TrocarPagina(_paginaSelecionada.Value);
+            Close();
 
         }
         private async void ExcluirPagina(int numeroPagina)
@@ -517,4 +511,5 @@ namespace BadgeManager
         }
 
     }
+
 }

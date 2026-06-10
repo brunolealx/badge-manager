@@ -19,30 +19,7 @@ namespace BadgeManager
             TxtDescricaoPagina.Text = "Selecione um PDF para visualizar, trocar, excluir ou acrescentar páginas.";
 
             AreaConteudo.Children.Clear();
-
-            var botoes = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 20)
-            };
-
-            botoes.Children.Add(new Button
-            {
-                Content = "+ Incluir",
-                Width = 120,
-                Height = 38,
-                Margin = new Thickness(0, 0, 10, 0)
-            });
-
-            botoes.Children.Add(new Button
-            {
-                Content = "- Excluir",
-                Width = 120,
-                Height = 38
-            });
-
-            AreaConteudo.Children.Add(botoes);
-
+                    
             var painelCards = new WrapPanel();
 
             AreaConteudo.Children.Add(painelCards);

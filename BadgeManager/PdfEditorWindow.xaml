@@ -26,7 +26,7 @@
                     Margin="0,0,0,20">
 
             <Button x:Name="BtnTrocarPagina"
-                    Content="Trocar página por outro PDF"
+                    Content="← Voltar"
                     Width="220"
                     Height="38"
                     Click="BtnTrocarPagina_Click"/>
